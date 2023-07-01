@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.AbsoluteEncoder;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RotateSubsystem extends SubsystemBase {
@@ -34,6 +35,8 @@ public class RotateSubsystem extends SubsystemBase {
   public static final int kTurningMotorCurrentLimit = 20; 
 
   private static final int turningCANId = 38;
+
+  private Rotation2d currentPosition = new Rotation2d(0);
 
   /** Creates a new TheyTurningSubsystem. */
   public RotateSubsystem() {
@@ -71,6 +74,10 @@ public class RotateSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    m_turningPIDController.setReference(currentPosition.getRadians(), CANSparkMax.ControlType.kPosition);
+  }
+
+  public void next() {
+    currentPosition = Rotation2d.fromDegrees(currentPosition.getDegrees() + 60);
   }
 }
